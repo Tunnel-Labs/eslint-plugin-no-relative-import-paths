@@ -1,16 +1,14 @@
 {
-  "name": "eslint-plugin-no-relative-import-paths",
-  "version": "v1.5.3",
-  "description": "",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MelvinVermeer/eslint-plugin-no-relative-import-paths"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "Melvin Vermeer <melvin.vermeer@gmail.com>",
-  "license": "ISC"
+	"name": "@tunnel/eslint-plugin-no-relative-import-paths",
+	"version": "0.0.3",
+	"main": "index.js",
+	"scripts": {
+		"format": "dprint fmt"
+	},
+	"dependencies": {
+		"pkg-dir": "^4.2.0"
+	},
+	"devDependencies": {
+		"dprint": "0.45.0"
+	}
 }

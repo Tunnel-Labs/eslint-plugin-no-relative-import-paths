@@ -1,13 +1,18 @@
 const path = require("path");
+const pkgDir = require("pkg-dir");
 
 function isParentFolder(relativeFilePath, context, rootDir) {
   const absoluteRootPath = path.join(context.getCwd(), rootDir);
-  const absoluteFilePath = path.join(path.dirname(context.getFilename()), relativeFilePath)
+  const absoluteFilePath = path.join(
+    path.dirname(context.getFilename()),
+    relativeFilePath
+  );
 
-  return relativeFilePath.startsWith("../") && (
-    rootDir === '' ||
-    (absoluteFilePath.startsWith(absoluteRootPath) &&
-      context.getFilename().startsWith(absoluteRootPath))
+  return (
+    relativeFilePath.startsWith("../") &&
+    (rootDir === "" ||
+      (absoluteFilePath.startsWith(absoluteRootPath) &&
+        context.getFilename().startsWith(absoluteRootPath)))
   );
 }
 
@@ -16,15 +21,14 @@ function isSameFolder(path) {
 }
 
 function getAbsolutePath(relativePath, context, rootDir, prefix) {
-  return [
-    prefix,
-    ...path
-      .relative(
-        path.join(context.getCwd(), rootDir),
-        path.join(path.dirname(context.getFilename()), relativePath)
-      )
-      .split(path.sep)
-  ].filter(String).join("/");
+  const packageDirpath = pkgDir.sync(context.getFilename());
+  return (
+    prefix +
+    path.relative(
+      packageDirpath,
+      path.join(path.dirname(context.getFilename()), relativePath)
+    )
+  );
 }
 
 const message = "import statements should have an absolute path";
@@ -39,13 +43,18 @@ module.exports = {
       create: function (context) {
         const { allowSameFolder, rootDir, prefix } = {
           allowSameFolder: context.options[0]?.allowSameFolder || false,
-          rootDir: context.options[0]?.rootDir || '',
-          prefix: context.options[0]?.prefix || '',
+          rootDir: context.options[0]?.rootDir || "",
+          prefix: context.options[0]?.prefix || "#",
         };
 
         return {
           ImportDeclaration: function (node) {
             const path = node.source.value;
+
+						if (path.includes('/node_modules/')) {
+							return;
+						}
+
             if (isParentFolder(path, context, rootDir)) {
               context.report({
                 node,
