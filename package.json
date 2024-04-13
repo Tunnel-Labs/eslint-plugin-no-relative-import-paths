@@ -1,6 +1,6 @@
 {
 	"name": "@tunnel/eslint-plugin-no-relative-import-paths",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"main": "index.js",
 	"scripts": {
 		"format": "dprint fmt"
